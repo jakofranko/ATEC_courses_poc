@@ -1,0 +1,36 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<title>ATEC Courses Proof of Concept</title>
+<link type="text/css" href="css/style.css" />
+<script type="text/javascript" src="d3/d3.v3.js"></script>
+</head>
+<body>
+<script>
+//JSON object to play with, stored as an array
+var classes = [
+{
+	"Name" : "Emerging Media",
+	"prefix" : "ATEC",
+	"number" : 2322,
+	"prereq" : "ATEC 2321",
+	"instructor" : "Andrew Famiglietti"
+},
+{
+	"Name" : "Something about blogs and stuff",
+	"prefix" : "ATEC",
+	"number" : 2321,
+	"prereq" : null,
+	"instructor" : "Andrew Famiglietti"
+},
+{
+	"Name" : "Digital Textuality",
+	"prefix" : "ATEC",
+	"number" : 4325,
+	"prereq" : ["ATEC 2321", "ATEC 2322"],
+	"instructor" : "Kim Knight"
+}
+];
+</script>
+</body>
+</html>

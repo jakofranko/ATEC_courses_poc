@@ -10,27 +10,63 @@
 //JSON object to play with, stored as an array
 var classes = [
 {
-	"Name" : "Emerging Media",
+	"name" : "Emerging Media",
 	"prefix" : "ATEC",
 	"number" : 2322,
 	"prereq" : "ATEC 2321",
 	"instructor" : "Andrew Famiglietti"
 },
 {
-	"Name" : "Something about blogs and stuff",
+	"name" : "Something about blogs and stuff",
 	"prefix" : "ATEC",
 	"number" : 2321,
 	"prereq" : null,
 	"instructor" : "Andrew Famiglietti"
 },
 {
-	"Name" : "Digital Textuality",
+	"name" : "Digital Textuality",
 	"prefix" : "ATEC",
 	"number" : 4325,
 	"prereq" : ["ATEC 2321", "ATEC 2322"],
 	"instructor" : "Kim Knight"
 }
 ];
+var h = 200;
+var w = 1000;
+var barPadding = 10;
+var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
+
+svg.selectAll("rect") //creates the class blocks
+	.data(classes)
+	.enter()
+	.append("rect")
+	.attr("height", 200)
+	.attr("width", 200)
+	.attr("x", function(d, i) {
+		return i * (w / classes.length);
+	})
+	.attr("y", 0)
+	.attr("fill", function(d) {
+		return "rbg(0, " + (d[2] / 100) + ", 0)";
+	});
+
+	svg.selectAll("text") //creates the labels for each box
+                .data(classes)
+                .enter()
+                .append("text")
+                .text(function(d, i) {
+                    return d[i].name;
+                })
+                .attr("x", function(d, i) {
+                    return i * (w / classes.length) + (w / classes.length - barPadding) / 2;
+                })
+                .attr("y", function(d) {
+                    return h-d + 12;
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "16px")
+                .attr("fill", "blue")
+                .attr("text-anchor", "middle");
 </script>
 </body>
 </html>

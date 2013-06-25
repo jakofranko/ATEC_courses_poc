@@ -1,72 +1,78 @@
-<!doctype html>
-<head>
+<!DOCTYPE html>
 <meta charset="utf-8">
-<title>ATEC Courses Proof of Concept</title>
-<link type="text/css" href="css/style.css" />
-<script type="text/javascript" src="d3/d3.v3.js"></script>
-</head>
-<body>
-<script>
-//JSON object to play with, stored as an array
-var classes = [
-{
-	"name" : "Emerging Media",
-	"prefix" : "ATEC",
-	"number" : 2322,
-	"prereq" : "ATEC 2321",
-	"instructor" : "Andrew Famiglietti"
-},
-{
-	"name" : "Something about blogs and stuff",
-	"prefix" : "ATEC",
-	"number" : 2321,
-	"prereq" : null,
-	"instructor" : "Andrew Famiglietti"
-},
-{
-	"name" : "Digital Textuality",
-	"prefix" : "ATEC",
-	"number" : 4325,
-	"prereq" : ["ATEC 2321", "ATEC 2322"],
-	"instructor" : "Kim Knight"
+<style>
+
+.node circle {
+  fill: #fff;
+  stroke: red;
+  stroke-width: 1.5px;
 }
-];
-var h = 200;
-var w = 1000;
-var barPadding = 10;
-var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
 
-svg.selectAll("rect") //creates the class blocks
-	.data(classes)
-	.enter()
-	.append("rect")
-	.attr("height", 200)
-	.attr("width", 200)
-	.attr("x", function(d, i) {
-		return i * (w / classes.length);
-	})
-	.attr("y", 0)
-	.attr("fill", function(d) {
-		return "rbg(0, " + (d[2] / 100) + ", 0)";
-	});
+.node {
+  font: 14px sans-serif;
+}
 
-	svg.selectAll("text") //creates the labels for each box
-                .data(classes)
-                .enter()
-                .append("text")
-                .text(function(d, i) {
-                    return d[i].name;
-                })
-                .attr("x", function(d, i) {
-                    return i * (w / classes.length) + (w / classes.length - barPadding) / 2;
-                })
-                .attr("y", function(d) {
-                    return h-d + 12;
-                })
-                .attr("font-family", "sans-serif")
-                .attr("font-size", "16px")
-                .attr("fill", "blue")
-                .attr("text-anchor", "middle");
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var root = {
+  "name" : "Blogs and stuff",
+  "children" : [
+    { "name" : "Emerging Media",
+    "children" : [
+      {"name" : "Digital Textuality"},
+      {"name" : "Alternative class"}
+    ]
+   }
+  ]
+}
+var width = 2960,
+    height = 200;
+
+var cluster = d3.layout.cluster()
+    .size([height, width - 160]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(150,0)");
+
+  var nodes = cluster.nodes(root),
+      links = cluster.links(nodes);
+
+  var link = svg.selectAll(".link")
+      .data(links)
+    .enter().append("path")
+      .attr("class", "link")
+      .attr("d", diagonal);
+
+  var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+
+  node.append("circle")
+      .attr("r", 4.5);
+
+  node.append("text")
+      .attr("dx", function(d) { return d.children ? -8 : 8; })
+      .attr("dy", 3)
+      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+      .text(function(d) { return d.name; });
+
+
+d3.select(self.frameElement).style("height", height + "px");
+
 </script>
-</body>
-</html>

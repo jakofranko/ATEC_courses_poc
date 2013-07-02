@@ -22,6 +22,46 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
+  var classes = [ 
+     {
+      "name" : "Social Media",
+      "prefix" : "ATEC",
+      "number" : 3322,
+      "prereq" : null,
+      "instructor" : "Andrew Famiglietti"
+     },
+     {
+      "name" : "Something about blogs and stuff",
+      "prefix" : "ATEC",
+      "number" : 2321,
+      "prereq" : null,
+      "instructor" : "Andrew Famiglietti"
+     },
+     {
+      "name" : "Digital Textuality",
+      "prefix" : "ATEC",
+      "number" : 4325,
+      "prereq" : ["ATEC 2321", "ATEC 2322"],
+      "instructor" : "Kim Knight",
+      "children" : [
+         {
+          "name" : "Something about blogs and stuff",
+          "prefix" : "ATEC",
+          "number" : 2321,
+          "prereq" : null,
+          "instructor" : "Andrew Famiglietti"
+         },
+         {
+          "name" : "Emerging Media",
+          "prefix" : "ATEC",
+          "number" : 2322,
+          "prereq" : "ATEC 2321",
+          "instructor" : "Andrew Famiglietti"
+         }
+      ]
+     }
+   ];
+
 var root = {
   "name" : "Blogs and stuff",
   "children" : [
@@ -33,46 +73,51 @@ var root = {
    }
   ]
 }
-var width = 2960,
-    height = 200;
+var w = 1000,
+    h = 1000;
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h)
+      .append("g")
 
-var cluster = d3.layout.cluster()
-    .size([height, width - 160]);
+var tree = d3.layout.tree()
+    .size([h-200, w - 200]);
+
+var nodes = tree.nodes(root), //this is the only place I need to specify the data. Nifty!
+    links = tree.links(nodes);
+
+var branch = svg.selectAll(".branch")
+    .data(nodes)
+    .enter()
+    .append("g")
+      .attr("class", "branch")
+      .attr("transform", function(d) {
+        return "translate(" + d.y + "," + d.x + ")";    
+        //flipping x and y makes it horizontal!
+        //The original below displays the tree vertically
+        //return "translate(" + d.x + "," + d.y + ")";
+      });
+
+branch.append("circle")
+  .attr("r", 5)
+  .attr("fill", "steelblue");
+
+branch.append("text")
+  .text(function(d) {
+    return d.name;
+  });
 
 var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
+  .projection(function(d) { return [d.y, d.x]; });
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-  .append("g")
-    .attr("transform", "translate(150,0)");
+svg.selectAll(".link")
+  .data(links)
+  .enter()
+  .append("path")
+  .attr("class", "link")
+  .attr("fill", "none")
+  .attr("stroke", "#adadad")
+  .attr("d", diagonal);
 
-  var nodes = cluster.nodes(root),
-      links = cluster.links(nodes);
-
-  var link = svg.selectAll(".link")
-      .data(links)
-    .enter().append("path")
-      .attr("class", "link")
-      .attr("d", diagonal);
-
-  var node = svg.selectAll(".node")
-      .data(nodes)
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-
-  node.append("circle")
-      .attr("r", 4.5);
-
-  node.append("text")
-      .attr("dx", function(d) { return d.children ? -8 : 8; })
-      .attr("dy", 3)
-      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-      .text(function(d) { return d.name; });
-
-
-d3.select(self.frameElement).style("height", height + "px");
 
 </script>

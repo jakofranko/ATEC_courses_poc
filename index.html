@@ -22,68 +22,111 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-  var classes = [ 
-     {
-      "name" : "Social Media",
-      "prefix" : "ATEC",
-      "number" : 3322,
-      "prereq" : null,
-      "instructor" : "Andrew Famiglietti"
-     },
-     {
-      "name" : "Something about blogs and stuff",
-      "prefix" : "ATEC",
-      "number" : 2321,
-      "prereq" : null,
-      "instructor" : "Andrew Famiglietti"
-     },
-     {
-      "name" : "Digital Textuality",
-      "prefix" : "ATEC",
-      "number" : 4325,
-      "prereq" : ["ATEC 2321", "ATEC 2322"],
-      "instructor" : "Kim Knight",
-      "children" : [
-         {
-          "name" : "Something about blogs and stuff",
-          "prefix" : "ATEC",
-          "number" : 2321,
-          "prereq" : null,
-          "instructor" : "Andrew Famiglietti"
-         },
-         {
-          "name" : "Emerging Media",
-          "prefix" : "ATEC",
-          "number" : 2322,
-          "prereq" : "ATEC 2321",
-          "instructor" : "Andrew Famiglietti"
-         }
-      ]
-     }
-   ];
+  var classes = {
+            "name" : "Captsone",
+            "prefix" : "ATEC",
+            "number" : 4500,
+            "prereq" : null,
+            "instructor" : "Varies",
+            "children" : [
+              {
+                "name" : "Persuasion",
+                "prefix" : "COMM",
+                "number" : 4325,
+                "prereq" : null,
+                "instructor" : "Lisa Bell",
+                "children" : [
+                  {
+                  "name" : "Reading Media",
+                  "prefix" : "COMM",
+                  "number" : 3300,
+                  "prereq" : null,
+                  "instructor" : "Janet Johnson",
+                  },
+                  {
+                    "name" : "Social Psychology",
+                    "prefix" : "PSY",
+                    "number" : 3330,
+                    "prereq" : null,
+                    "instructor" : "Dr. Huxtable",
+                    "children" : [
+                      {
+                        "name" : "",
+                        "prefix" : "",
+                        "number" : null,
+                        "prereq" : null,
+                        "instructor" : "",
+                        "children" : [
+                          {
+                            "name" : "Intro to Psychology",
+                            "prefix" : "PSY",
+                            "number" : 101,
+                            "prereq" : null,
+                            "instructor" : "Your Mother"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name" : "Some other class",
+                "prefix" : "ATEC",
+                "number" : 4025,
+                "prereq" : ["ATEC 2321", "ATEC 2322"],
+                "instructor" : "Kim Knight",
+              }, 
+               {
+                "name" : "Digital Textuality",
+                "prefix" : "ATEC",
+                "number" : 4325,
+                "prereq" : ["ATEC 2321", "ATEC 2322"],
+                "instructor" : "Kim Knight",
+                "children" : [
+                   {
+                    "name" : "Something about blogs and stuff",
+                    "prefix" : "ATEC",
+                    "number" : 2321,
+                    "prereq" : null,
+                    "instructor" : "Andrew Famiglietti"
+                   },
+                   {
+                    "name" : "Emerging Media",
+                    "prefix" : "ATEC",
+                    "number" : 2322,
+                    "prereq" : "ATEC 2321",
+                    "instructor" : "Andrew Famiglietti"
+                   }
+                ]
+               }
+              ]
+            };
 
-var root = {
-  "name" : "Blogs and stuff",
-  "children" : [
-    { "name" : "Emerging Media",
-    "children" : [
-      {"name" : "Digital Textuality"},
-      {"name" : "Alternative class"}
-    ]
-   }
-  ]
-}
+    var root = {
+      "name" : "Blogs and stuff",
+      "children" : [
+        { "name" : "Emerging Media",
+        "children" : [
+          {"name" : "Digital Textuality"},
+          {"name" : "Alternative class"}
+        ]
+       }
+      ]
+    }
+  
 var w = 1000,
     h = 1000;
 var svg = d3.select("body").append("svg")
     .attr("width", w)
     .attr("height", h)
       .append("g")
+      .attr("transform", "translate: 10, 10");
 
 var tree = d3.layout.tree()
     .size([h-200, w - 200]);
 
-var nodes = tree.nodes(root), //this is the only place I need to specify the data. Nifty!
+var nodes = tree.nodes(classes), //this is the only place I need to specify the data. Nifty!
     links = tree.links(nodes);
 
 var branch = svg.selectAll(".branch")
@@ -104,7 +147,7 @@ branch.append("circle")
 
 branch.append("text")
   .text(function(d) {
-    return d.name;
+    return d.name + "<br>" + d.prefix + " " + d.number + "<br>" + d.instructor;
   });
 
 var diagonal = d3.svg.diagonal()

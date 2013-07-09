@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Catalogue</title>
+</head>
+<body>
+	<h1>Well here are all the courses in the catalog...</h1>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+	var w = 1000,
+		h = 1000,
+		r = 5;
+	var canvas = d3.select("body").append("svg")
+			.attr("width", w)
+			.attr("height", h);
+	var group = canvas.append("g")
+			.attr("transform", "translate(100,100)");
+
+	d3.csv("Catalog.csv", function(data) {
+		group.selectAll("circle")
+			.data(data)
+			.enter()
+			.append("circle")
+				.attr("cx", function(d, i) { return i + 15 })
+				.attr("cy", function(d, i) { return i + 35 })
+				.attr("r", r)
+				.attr("fill", "steelblue");
+
+		group.selectAll("text")
+				.data(data)
+				.enter()
+				.append("text")
+					.text(function(d) { return d.Prefix + " " + d.Number })
+					.attr("x", function(d, i) { return i + 25 })
+					.attr("y", function(d, i) { return i + 25 })
+					.attr("font-family", "sans-serif")
+                	.attr("font-size", "4px")
+               		.attr("fill", "crimson");
+    });
+</script>
+</body>
+</html>

@@ -22,8 +22,8 @@
 			.data(data)
 			.enter()
 			.append("circle")
-				.attr("cx", function(d, i) { return i + 15 })
-				.attr("cy", function(d, i) { return i + 35 })
+				.attr("cx", function(d, i) { return i * 15 })
+				.attr("cy", function(d, i) { return i * 15 })
 				.attr("r", r)
 				.attr("fill", "steelblue");
 
@@ -32,11 +32,13 @@
 				.enter()
 				.append("text")
 					.text(function(d) { return d.Prefix + " " + d.Number })
-					.attr("x", function(d, i) { return i + 25 })
-					.attr("y", function(d, i) { return i + 25 })
+					.attr("x", function(d, i) { return (i * 15) + 6 })
+					.attr("y", function(d, i) { return (i * 15) + 1 })
 					.attr("font-family", "sans-serif")
-                	.attr("font-size", "4px")
-               		.attr("fill", "crimson");
+					.attr("fill", "white")
+               			.transition().attr("fill", "crimson")
+					.attr("font-size", "10px")
+                		.transition().delay("750").attr("font-size", "4px");
     });
 </script>
 </body>

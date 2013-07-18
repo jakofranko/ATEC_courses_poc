@@ -1,4 +1,4 @@
-prefix,number,title,credits,description,prereqs,frequency
+prefix,number,title,credits,description,prereq,frequency
 ATEC,2320,Introductory Topics in Arts and Technology,3,Introduces students to the field of arts and technology. Sections may be devoted exclusively to a single aspect of the field or to a combination of related aspects.,,S
 ATEC,2321,Writing and Research for New Media,3,This writing-intensive course focuses on writing for new and emergent media environments. The course will introduce digital and electronically augmented information-gathering techniques for use in emerging media and communications.,,Y
 ATEC,2322,Introduction to Electronic and Digital Communications,3,"The course will examine the history of electronic communications with a critical view of their effects on society. The focus will be on the role of the Internet in contemporary life, the commodification of news and information, and will introduce electronic and digital research methods for emerging media and communications.",ATEC 2321,Y
@@ -82,8 +82,3 @@ ATEC,7331,Research Methodology in Arts and Technology,3,"This course presents st
 ATEC,7390,Special Topics in Arts and Technology,3,If taken as an independent studies course may count toward minimum course requirements for the M.A. or M.F.A. degree. (May be repeated for credit to a maximum of 9 credit hours.),,R
 ATEC,8303,Independent Readings in Arts and Technology,3,(May be repeated for credit),,R
 ATEC,8305,Independent Research in Arts and Technology,3,(May be repeated for credit.),,R
-ATEC,4V71,Independent Study in Arts and Technology,1/3/2013,"Independent study under a faculty member's direction. Signature of instructor on proposed project outline required. May be repeated for credit (9 hours maximum). Prerequisite: Upper-division standing, and completion of all lower-division requirements in ATEC and permission of the instructor.",,R
-ATEC,6V81,Special Topics in Emergent Communication,1/9/2013,"Explores current theories informing research on and practices in digital media and communication, such as distributed, mobile, time-shifted, interactive and personal media. (May be repeated for credit as topics vary to a maximum of 9 credit hours.)",,T
-ATEC,6V95,Advanced Project Workshop,3/6/2013,Students will engage in the creation of an advanced creative and/or research project exploring the interaction of the arts with digital technology. Required of all degree candidates in Arts and Technology.,,Y
-ATEC,7V81,Advanced Project Workshop,3/6/2013,Students will engage in the creation of an advanced creative and/or research project exploring the interaction of the arts with digital technology.,,R
-ATEC,7V82,Advanced Projects in Interactive Media,1/9/2013,Students will complete an advanced creative and/or research project exploring the interaction of communication and digital technology. (May be repeated for credit as topics vary to a maximum of 9 credit hours.),,R

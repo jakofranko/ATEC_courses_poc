@@ -7,48 +7,35 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-  var classes = [
-    {
-      "name" : "Captsone",
-      "prefix" : "ATEC",
-      "number" : 4500,
-      "prereq" : null,
-      "instructor" : "Varies",
-    },
-    {
-      "name" : "Writing in Digital Text",
-      "prefix" : "ATEC",
-      "number" : 3500,
-      "prereq" : "ATEC 3300",
-      "instructor" : "Kim Knight",
-    },
-    {
-      "name" : "Your Momma",
-      "prefix" : "ATEC",
-      "number" : 3300,
-      "prereq" : null,
-      "instructor" : "Lisa Bell",
-    }
-  ]
+  var w = 2000,
+      h = 2000,
+      r = 10;
 
-  var w = 1000,
-      h = 1000,
-      r = 30;
-  function x(d, i) { 
-        if(d.number.toString().substring(0,1) == 2) { return 100; } 
-        else if(d.number.toString().substring(0,1) == 3) { return 200; } 
-        else if(d.number.toString().substring(0,1) == 4) { return 300; } 
-      };
-  function y(d, i) { return i * 70 + 50 };
+  // function x(d, i) { 
+  //       if(d.number.toString().substring(0,1) == 2) { return 100; } 
+  //       else if(d.number.toString().substring(0,1) == 3) { return 200; } 
+  //       else if(d.number.toString().substring(0,1) == 4) { return 300; } 
+  //     };
+  // function y(d, i) { return i * 70 + 50 };
+
+  
 
   var svg = d3.select("body").append("svg")
     .attr("width", w)
     .attr("height", h);
-  var line = d3.svg.line()
-    .x(x)
-    .y(y);
+  var group = svg.append("g")
+      .attr("transform", "translate(0, 10)");
 
-  var cirlces = svg.selectAll("circle")
+d3.csv("atec_courses.csv", function(classes) {
+  function x(d, i) { return d.number.toString().substring(0, 2)*10 };
+  function y(d, i) { return (d.number.toString().substring(2, 4)*10 + i*h)/classes.length };
+
+  // function xTarget(d) { return d.prereq.toString().substring(0, 2)*10 };
+  // function yTarget(d) { return d.prereq.toString().substring(2, 4)*3 + 30};
+
+  console.log(classes.length);
+
+  var cirlces = group.selectAll("circle")
     .data(classes)
     .enter()
     .append("circle")
@@ -60,20 +47,41 @@
       "stroke": "none",
       "id": function(d){return d.number;}
     })
+    .on("mouseover", function() { 
+           d3.selectAll("path")
+          .style("stroke", "crimson")
+          .transition()
+          .duration(1000)
+          .style("stroke", "crimson")
+        })
+    .on("mouseout", function() { 
+       d3.selectAll("path")
+       // if you remove this transition, 
+       // the "mouseover" transition takes precedence 
+       // and leaves the border "stuck" at red
+       .transition()     
+       .duration(500)
+       .style("stroke", "none")
+    }); 
+   // .property("__data__", function(d) { return d + append("hey: you suck") }); <-- sets custom data!
 
   var prereqs = classes.filter(function(d){return d.prereq});
-  console.log(prereqs);
+   console.log((prereqs[0].prereq.toString().substring(7, 9)*10 + 0*h)/classes.length);
+
+  var diagonal = d3.svg.diagonal()
+    .source( function(d, i) { return {x: d.number.toString().substring(0, 2)*10, y: (d.number.toString().substring(2, 4)*10 + i*h)/classes.length } } )
+    .target( function(d, i) { return {x: d.prereq.toString().substring(5, 7)*10, y: (d.prereq.toString().substring(7, 9)*10 + i*h)/classes.length } } );
   
-  var lines = svg.selectAll("path")
+  var lines = group.selectAll("path")
     .data(prereqs)
     .enter()
     .append("path")
     .attr({
       fill: "none",
-      stroke: "lightblue",
-      d: line
-    })    
-
+      stroke: "none",
+      d: diagonal
+    }) 
+})
   
 </script>
 </body>

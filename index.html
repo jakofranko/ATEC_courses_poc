@@ -23,59 +23,47 @@
   var svg = d3.select("body").append("svg")
     .attr("width", w)
     .attr("height", h);
-  var group = svg.append("g")
-      .attr("transform", "translate(0, 10)");
+ 
 
 d3.csv("atec_courses.csv", function(classes) {
   function x(d, i) { return d.number.toString().substring(0, 2)*10 };
-  function y(d, i) { return (d.number.toString().substring(2, 4)*10 + i*h)/classes.length };
+  function y(d, i) { 
+    if(d.number.toString().substring(2,3) == 2) { 
+      return (d.number.toString().substring(2, 4)*10 + i*h)/classes.length
+    } else if(d.number.toString().substring(2,3) == 3) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 100
+    } else if (d.number.toString().substring(2,3) == 4) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 300
+    } else if (d.number.toString().substring(2,3) == 5) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 400
+    } else if (d.number.toString().substring(2,3) == 6) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 500
+    } else if (d.number.toString().substring(2,3) == 7) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 600
+    } else if (d.number.toString().substring(2,3) == 8) {
+      return ((d.number.toString().substring(2, 4)*10 + i*h)/classes.length) - 700
+    }
+  };
 
   // function xTarget(d) { return d.prereq.toString().substring(0, 2)*10 };
   // function yTarget(d) { return d.prereq.toString().substring(2, 4)*3 + 30};
+   var group = svg.selectAll("g")
+      .data(classes)
+      .enter()
+      .append("g");
 
-
-  var cirlces = group.selectAll("circle")
-    .data(classes)
-    .enter()
-    .append("circle")
+  var cirlces = group.append("circle")
     .attr({
       "cx": x,
       "cy": y,
       "r": r,
       "fill": "steelblue",
       "stroke": "none",
-      "id": function(d){return d.number;}
+      "class": function(d){return d.number;}
     })
-    .on("mouseover", function() { 
-           d3.selectAll("path")
-          .transition()
-          .duration(1000)
-          .style("stroke", "crimson")
-    })
-    .on("mouseout", function() { 
-       d3.selectAll("path")
-       // if you remove this transition, 
-       // the "mouseover" transition takes precedence 
-       // and leaves the border "stuck" at red
-       .transition()     
-       .duration(500)
-       .style("stroke", "lightblue")
-     })
-    .on("click", function() {
-      d3.select(this)
-          .transition()
-          .duration(1000)
-          .attr({
-            "r": 200,
-            "fill": "gold"
-          })
-     })
     
    // .property("__data__", function(d) { return d + append("hey: you suck") }); <-- sets custom data!
-  var titles = group.selectAll("text.title")
-    .data(classes)
-    .enter()
-    .append("text")
+  var titles = group.append("text")
     .text(function(d) { return d.prefix + " " + d.number } )
     .attr({
       "transform": "translate(10, 0)",
@@ -88,10 +76,7 @@ d3.csv("atec_courses.csv", function(classes) {
     })
     ;
   
-  var descriptions = group.selectAll("textarea.description")
-    .data(classes)
-    .enter()
-    .append("textarea")
+  var descriptions = group.append("textarea")
     .text(function(d) { return d.description } )
     .attr({
       "x": x,
@@ -106,25 +91,25 @@ d3.csv("atec_courses.csv", function(classes) {
     
   var prereqs = classes.filter(function(d){return d.prereq});
 
-  var diagonal = d3.svg.diagonal()
+//   var diagonal = d3.svg.diagonal()
 
-/* This just seems easier. you would need to know the position of i when the original object was generated in order to re create the position mathematically. So i'm just pulling cx and cy from the dom directly.*/
-    .source( function(d, i) {return {
-					x: document.getElementById(d.number.substring(0, 4)).getAttribute("cx")*1, 
-					y: document.getElementById(d.number.substring(0, 4)).getAttribute("cy")*1 } } )
-    .target( function(d, i) { return {
-					x: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cx")*1, 
-					y: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cy")*1} } );
+// /* This just seems easier. you would need to know the position of i when the original object was generated in order to re create the position mathematically. So i'm just pulling cx and cy from the dom directly.*/
+//     .source( function(d, i) {return {
+// 					x: document.getElementById(d.number.substring(0, 4)).getAttribute("cx")*1, 
+// 					y: document.getElementById(d.number.substring(0, 4)).getAttribute("cy")*1 } } )
+//     .target( function(d, i) { return {
+// 					x: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cx")*1, 
+// 					y: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cy")*1} } );
   
-  var lines = group.selectAll("path")
-    .data(prereqs)
-    .enter()
-    .append("path")
-    .attr({
-      fill: "none",
-      stroke: "lightblue",
-      d: diagonal
-    }) 
+//   var lines = group.selectAll("path")
+//     .data(prereqs)
+//     .enter()
+//     .append("path")
+//     .attr({
+//       fill: "none",
+//       stroke: "lightblue",
+//       d: diagonal
+//     }) 
 })
   
 </script>

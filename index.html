@@ -1,166 +1,132 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-
-.node circle {
-  fill: #fff;
-  stroke: red;
-  stroke-width: 1.5px;
-}
-
-.node {
-  font: 14px sans-serif;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
-
-</style>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Atec Courses</title>
+</head>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-  var classes = {
-            "name" : "Captsone",
-            "prefix" : "ATEC",
-            "number" : 4500,
-            "prereq" : null,
-            "instructor" : "Varies",
-            "children" : [
-              {
-                "name" : "Persuasion",
-                "prefix" : "COMM",
-                "number" : 4325,
-                "prereq" : null,
-                "instructor" : "Lisa Bell",
-                "children" : [
-                  {
-                  "name" : "Reading Media",
-                  "prefix" : "COMM",
-                  "number" : 3300,
-                  "prereq" : null,
-                  "instructor" : "Janet Johnson",
-                  },
-                  {
-                    "name" : "Social Psychology",
-                    "prefix" : "PSY",
-                    "number" : 3330,
-                    "prereq" : null,
-                    "instructor" : "Dr. Huxtable",
-                    "children" : [
-                      {
-                        "name" : "",
-                        "prefix" : "",
-                        "number" : null,
-                        "prereq" : null,
-                        "instructor" : "",
-                        "children" : [
-                          {
-                            "name" : "Intro to Psychology",
-                            "prefix" : "PSY",
-                            "number" : 101,
-                            "prereq" : null,
-                            "instructor" : "Your Mother"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "name" : "Some other class",
-                "prefix" : "ATEC",
-                "number" : 4025,
-                "prereq" : ["ATEC 2321", "ATEC 2322"],
-                "instructor" : "Kim Knight",
-              }, 
-               {
-                "name" : "Digital Textuality",
-                "prefix" : "ATEC",
-                "number" : 4325,
-                "prereq" : ["ATEC 2321", "ATEC 2322"],
-                "instructor" : "Kim Knight",
-                "children" : [
-                   {
-                    "name" : "Something about blogs and stuff",
-                    "prefix" : "ATEC",
-                    "number" : 2321,
-                    "prereq" : null,
-                    "instructor" : "Andrew Famiglietti"
-                   },
-                   {
-                    "name" : "Emerging Media",
-                    "prefix" : "ATEC",
-                    "number" : 2322,
-                    "prereq" : "ATEC 2321",
-                    "instructor" : "Andrew Famiglietti"
-                   }
-                ]
-               }
-              ]
-            };
+  var w = 2000,
+      h = 2000,
+      r = 10;
 
-    var root = {
-      "name" : "Blogs and stuff",
-      "children" : [
-        { "name" : "Emerging Media",
-        "children" : [
-          {"name" : "Digital Textuality"},
-          {"name" : "Alternative class"}
-        ]
-       }
-      ]
-    }
+  // function x(d, i) { 
+  //       if(d.number.toString().substring(0,1) == 2) { return 100; } 
+  //       else if(d.number.toString().substring(0,1) == 3) { return 200; } 
+  //       else if(d.number.toString().substring(0,1) == 4) { return 300; } 
+  //     };
+  // function y(d, i) { return i * 70 + 50 };
+
   
-var w = 1000,
-    h = 1000;
-var svg = d3.select("body").append("svg")
+
+  var svg = d3.select("body").append("svg")
     .attr("width", w)
-    .attr("height", h)
-      .append("g")
-      .attr("transform", "translate: 10, 10");
+    .attr("height", h);
+  var group = svg.append("g")
+      .attr("transform", "translate(0, 10)");
 
-var tree = d3.layout.tree()
-    .size([h-200, w - 200]);
+d3.csv("atec_courses.csv", function(classes) {
+  function x(d, i) { return d.number.toString().substring(0, 2)*10 };
+  function y(d, i) { return (d.number.toString().substring(2, 4)*10 + i*h)/classes.length };
 
-var nodes = tree.nodes(classes), //this is the only place I need to specify the data. Nifty!
-    links = tree.links(nodes);
+  // function xTarget(d) { return d.prereq.toString().substring(0, 2)*10 };
+  // function yTarget(d) { return d.prereq.toString().substring(2, 4)*3 + 30};
 
-var branch = svg.selectAll(".branch")
-    .data(nodes)
+
+  var cirlces = group.selectAll("circle")
+    .data(classes)
     .enter()
-    .append("g")
-      .attr("class", "branch")
-      .attr("transform", function(d) {
-        return "translate(" + d.y + "," + d.x + ")";    
-        //flipping x and y makes it horizontal!
-        //The original below displays the tree vertically
-        //return "translate(" + d.x + "," + d.y + ")";
-      });
+    .append("circle")
+    .attr({
+      "cx": x,
+      "cy": y,
+      "r": r,
+      "fill": "steelblue",
+      "stroke": "none",
+      "id": function(d){return d.number;}
+    })
+    .on("mouseover", function() { 
+           d3.selectAll("path")
+          .transition()
+          .duration(1000)
+          .style("stroke", "crimson")
+    })
+    .on("mouseout", function() { 
+       d3.selectAll("path")
+       // if you remove this transition, 
+       // the "mouseover" transition takes precedence 
+       // and leaves the border "stuck" at red
+       .transition()     
+       .duration(500)
+       .style("stroke", "lightblue")
+     })
+    .on("click", function() {
+      d3.select(this)
+          .transition()
+          .duration(1000)
+          .attr({
+            "r": 200,
+            "fill": "gold"
+          })
+     })
+    
+   // .property("__data__", function(d) { return d + append("hey: you suck") }); <-- sets custom data!
+  var titles = group.selectAll("text.title")
+    .data(classes)
+    .enter()
+    .append("text")
+    .text(function(d) { return d.prefix + " " + d.number } )
+    .attr({
+      "transform": "translate(10, 0)",
+      "x": x,
+      "y": y,
+      "font-family": "sans-serif",
+      "font-size": 9,
+      "fill": "black",
+      "class": "title"
+    })
+    ;
+  
+  var descriptions = group.selectAll("textarea.description")
+    .data(classes)
+    .enter()
+    .append("textarea")
+    .text(function(d) { return d.description } )
+    .attr({
+      "x": x,
+      "y": y,
+      "width": 175,
+      "transform": "translate(10,10)",
+      "font-family": "sans-serif",
+      "font-size": 9,
+      "fill": "black",
+      "class": "description"
+    });
+    
+  var prereqs = classes.filter(function(d){return d.prereq});
 
-branch.append("circle")
-  .attr("r", 5)
-  .attr("fill", "steelblue");
+  var diagonal = d3.svg.diagonal()
 
-branch.append("text")
-  .text(function(d) {
-    return d.name + "<br>" + d.prefix + " " + d.number + "<br>" + d.instructor;
-  });
-
-var diagonal = d3.svg.diagonal()
-  .projection(function(d) { return [d.y, d.x]; });
-
-svg.selectAll(".link")
-  .data(links)
-  .enter()
-  .append("path")
-  .attr("class", "link")
-  .attr("fill", "none")
-  .attr("stroke", "#adadad")
-  .attr("d", diagonal);
-
-
+/* This just seems easier. you would need to know the position of i when the original object was generated in order to re create the position mathematically. So i'm just pulling cx and cy from the dom directly.*/
+    .source( function(d, i) {return {
+					x: document.getElementById(d.number.substring(0, 4)).getAttribute("cx")*1, 
+					y: document.getElementById(d.number.substring(0, 4)).getAttribute("cy")*1 } } )
+    .target( function(d, i) { return {
+					x: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cx")*1, 
+					y: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cy")*1} } );
+  
+  var lines = group.selectAll("path")
+    .data(prereqs)
+    .enter()
+    .append("path")
+    .attr({
+      fill: "none",
+      stroke: "lightblue",
+      d: diagonal
+    }) 
+})
+  
 </script>
+</body>
+</html>    

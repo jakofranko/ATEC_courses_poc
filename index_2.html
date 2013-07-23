@@ -107,8 +107,14 @@ d3.csv("atec_courses.csv", function(classes) {
   var prereqs = classes.filter(function(d){return d.prereq});
 
   var diagonal = d3.svg.diagonal()
-    .source( function(d, i) { return {x: d.number.toString().substring(0, 2)*10, y: (d.number.toString().substring(2, 4)*10 + i*h)/prereqs.length } } )
-    .target( function(d, i) { return {x: d.number.toString().substring(5, 7)*10, y: (d.number.toString().substring(7, 9)*10 + i*h)/classes.length } } );
+
+/* This just seems easier. you would need to know the position of i when the original object was generated in order to re create the position mathematically. So i'm just pulling cx and cy from the dom directly.*/
+    .source( function(d, i) {return {
+					x: document.getElementById(d.number.substring(0, 4)).getAttribute("cx")*1, 
+					y: document.getElementById(d.number.substring(0, 4)).getAttribute("cy")*1 } } )
+    .target( function(d, i) { return {
+					x: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cx")*1, 
+					y: document.getElementById(d.prereq.substring(5, 9)).getAttribute("cy")*1} } );
   
   var lines = group.selectAll("path")
     .data(prereqs)

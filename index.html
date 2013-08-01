@@ -32,6 +32,16 @@
       h = 850,
       r = 12;
 
+  var col = 0,
+      colNum = 10;
+
+ 
+  // var x = function() {
+  //   return col*50;
+  // };
+  // var y = function(i) {
+  //   return i * (h/colNum);
+  // };
   // function x(d, i) { 
   //       if(d.number.toString().substring(0,1) == 2) { return 100; } 
   //       else if(d.number.toString().substring(0,1) == 3) { return 200; } 
@@ -47,8 +57,17 @@
  
 
 d3.csv("atec_courses.csv", function(classes) {
-  function x(d, i) { return d.number.toString().substring(0, 2)*10 };
-  function y(d, i) { return i*2.5 * (h/classes.length) };
+  var x = function(d, i) { 
+    if(i == 10 || i == 20 || i == 30 || i == 40) {
+      col++
+      return col*50;
+    } else {
+      return col * 50;
+    }
+  };
+  var y = function(d, i) { 
+    return i*2.5 * (h/classes.length) 
+  };
   //function moveGroup(numElements) { return h }
 
   // function xTarget(d) { return d.prereq.toString().substring(0, 2)*10 };
@@ -56,13 +75,13 @@ d3.csv("atec_courses.csv", function(classes) {
 
   //Alternate grouping would be to filter data based on prereq being null or not, and to seperate the data that way
   //Also, am trying to figure out a way to best group the related classes so that they could perhaps all be in the same group.
-   
+  
   var group = svg.selectAll("g")
       .data(classes)
       .enter()
       .append("g")
       .attr("transform", "translate(-100, 50)")
-      .attr("class", function(d){return "group_" + d.number.toString().substring(0, 1);})
+      .attr("class", function(d){return "group_" + d.number[0]})
       .on("mouseover", function(d, i) { 
         d3.select(this)
         .select("path")
@@ -82,185 +101,23 @@ d3.csv("atec_courses.csv", function(classes) {
         d3.select(".description_panel h1").html(d.prefix + " " + d.number);
         d3.select(".description_panel p").html(d.description);
       });
-
-  var group_2 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 2});
-      var cirlces2 = group_2.append("circle")
+  var cirlces = group.append("circle")
         .attr({
           "cx": x,
           "cy": y,
           "r": r,
           "id": function(d){return d.number}
         });
-      var titles2 = group_2.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions2 = group_2.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-
-  var group_3 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 3});
-    var cirlces3 = group_3.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles3 = group_3.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions3 = group_3.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-  var group_4 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 4});
-    var cirlces4 = group_4.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles4 = group_4.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions4 = group_4.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-  var group_5 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 5});
-    var cirlces5 = group_5.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles5 = group_5.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions5 = group_5.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-  var group_6 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 6});
-    var cirlces6 = group_6.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles6 = group_6.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions6 = group_6.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-  var group_7 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 7});
-    var cirlces7 = group_7.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles7 = group_7.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions7 = group_7.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-  var group_8 = group.filter(function(d) { return d.number.toString().substring(0, 1) == 8});
-    var cirlces8 = group_8.append("circle")
-        .attr({
-          "cx": x,
-          "cy": y,
-          "r": r,
-          "id": function(d){return d.number}
-        });
-      var titles8 = group_8.append("text")
-          .text(function(d) { return d.prefix + " " + d.number } )
-          .attr({
-            "transform": "translate(15, 2)",
-            "x": x,
-            "y": y,
-            "class": "title"
-          });
-      var descriptions8 = group_8.append("foreignObject")
-          .attr({
-            "x": x,
-            "y": y,
-            "width": 175,
-            "class": "description"
-          })
-          .append("p")
-          .html(function(d) { return d.description } );
-
-
+  var titles = group.append("text")
+      .text(function(d) { return d.prefix + " " + d.number } )
+      .attr({
+        "transform": "translate(15, 2)",
+        "x": x,
+        "y": y,
+        "class": "title"
+      });
+  console.log(group[0].length);
+  //Loops through all the groups, putting 
 
   var diagonal = d3.svg.diagonal()
 

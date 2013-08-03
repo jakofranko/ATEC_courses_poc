@@ -28,12 +28,11 @@
   <div id="canvas"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-  var w = 850,
+  var w = 1050,
       h = 850,
-      r = 12;
+      r = 15;
 
-  var col = 0,
-      colNum = 10;
+  var colNum = 10;
 
  
   // var x = function() {
@@ -57,16 +56,21 @@
  
 
 d3.csv("atec_courses.csv", function(classes) {
-  var x = function(d, i) { 
-    if(i == 10 || i == 20 || i == 30 || i == 40) {
-      col++
-      return col*50;
+  var colX = 0,
+      colY = 0;
+  var x = function(d, i) {
+    if(i % 10 == 0 && i != 0) { 
+      colX++
+      return colX*100;
     } else {
-      return col * 50;
+      return colX * 100;
     }
   };
   var y = function(d, i) { 
-    return i*2.5 * (h/classes.length) 
+    if(i % 10 == 0 && i != 0) { 
+      colY++;
+    }
+    return (i * (h/(colNum))) - (h*colY);
   };
   //function moveGroup(numElements) { return h }
 
@@ -80,7 +84,7 @@ d3.csv("atec_courses.csv", function(classes) {
       .data(classes)
       .enter()
       .append("g")
-      .attr("transform", "translate(-100, 50)")
+      .attr("transform", "translate(100, 50)")
       .attr("class", function(d){return "group_" + d.number[0]})
       .on("mouseover", function(d, i) { 
         d3.select(this)
@@ -111,9 +115,9 @@ d3.csv("atec_courses.csv", function(classes) {
   var titles = group.append("text")
       .text(function(d) { return d.prefix + " " + d.number } )
       .attr({
-        "transform": "translate(15, 2)",
-        "x": x,
-        "y": y,
+        "transform": "translate(-28, -25)",
+        "x": function(d) { return document.getElementById(d.number).getAttribute("cx") },
+        "y": function(d) { return document.getElementById(d.number).getAttribute("cy") },
         "class": "title"
       });
   console.log(group[0].length);
@@ -124,7 +128,9 @@ d3.csv("atec_courses.csv", function(classes) {
 /* This just seems easier. you would need to know the position of i when the original object was generated in order to re create the position mathematically. So i'm just pulling cx and cy from the dom directly.*/
     .source( function(d, i) { return {
 					"x": document.getElementById(d.number).getAttribute("cx")*1, 
-					"y": document.getElementById(d.number).getAttribute("cy")*1 } } )
+					"y": document.getElementById(d.number).getAttribute("cy")*1 
+          } 
+        })
     .target( function(d, i) { return {
 					"x": document.getElementById(d.prereq.substring(5, 9)).getAttribute("cx")*1, 
 					"y": document.getElementById(d.prereq.substring(5, 9)).getAttribute("cy")*1} } );
